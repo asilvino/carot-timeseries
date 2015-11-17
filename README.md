@@ -8,12 +8,13 @@ These examples are using "caret","data.table" and "pls" libraries.
 
 All the databases were retrived from the following places:
 <br/>
-S&P500 Index1 (from January 2, 1990 to December 31, 1999),
+**S&P500** Index1 (from January 2, 1990 to December 31, 1999).<br/>
 SP500 -> <br/>
-> library(MASS)
-> data(SP500)
-> plot(SP500, type = 'l')
+> library(MASS)<br/>
+> data(SP500)<br/>
+> plot(SP500, type = 'l')<br/>
 
+**elec.dat** and **stemp.dat** are from the Paul Cowpertwait's databases, from **Introductory Time Series with R** <br/>
 http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/#Data
 
 The monthly supply of electricity (millions of kWh), beer (Ml),
@@ -28,13 +29,14 @@ Temperature data (1850–2007; see Brohan et al. 2006) for the southern
 hemisphere were extracted from the database maintained by the University
 of East Anglia Climatic Research Unit
 <br/>
-shtemp -> <br/>
+stemp -> <br/>
 http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/stemp.dat
 
 The other databases are from :
-https://www.kaggle.com/c/rossmann-store-sales/data
-store1 -> <br/>
-store2 -> <br/>
+https://www.kaggle.com/c/rossmann-store-sales/data<br/>
+You are provided with historical sales data for 1,115 Rossmann stores. The task is to forecast the "Sales" column for the test set. Note that some stores in the dataset were temporarily closed for refurbishment.<br/>
+store1 -> store1.csv <br/>
+store2 -> store2.csv<br/>
 
 
 
