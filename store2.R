@@ -2,7 +2,7 @@ library(caret)
 library(ggplot2)
 library(pls)
 
-loja1 <- read.csv("c:/ar/project/databases/train-loja2.csv", header = TRUE, sep = ";", quote = "\"")
+loja1 <- read.csv("./databases/store2.csv", header = TRUE, sep = ";", quote = "\"")
 plot(loja1$Date,loja1$Sales)
 
 plot(loja1$Sales, type = 'l')

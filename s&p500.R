@@ -15,9 +15,8 @@ library(MASS)
 nLag <- 12
 khorizon <- 1
 #data(SP500)
-#sp5002 <- read.csv("c:/ar/project/databases/SP5002.csv", header = TRUE, sep = ";", quote = "\"")
-sp500 <- read.csv("c:/ar/project/databases/SP500.csv", header = TRUE, sep = ";", quote = "\"")
-sp5002 <- read.csv("c:/ar/project/databases/SP500.csv", header = TRUE, sep = ";", quote = "\"")
+sp500 <- read.csv("./databases/SP500.csv", header = TRUE, sep = ";", quote = "\"")
+sp5002 <- read.csv("./databases/SP500.csv", header = TRUE, sep = ";", quote = "\"")
 
 plot(sp500$SP500, type = 'l')
 #acf(SP500)

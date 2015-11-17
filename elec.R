@@ -9,11 +9,9 @@ library(rpart)
 nLag <- 12
 khorizon <- 1
 
-www <- "c:/ar/project/databases/elec.dat"
+www <- "./databases/elec.dat"
 CBE <- read.table(www, header = T)
-#www2 <- "c:/ar/project/databases/elect2.dat"
-www <- "c:/ar/project/databases/elec.dat"
-# CBE2 <- read.csv("c:/ar/project/databases/elect2.csv", header = TRUE, sep = ";", quote = "\"")
+www <- "./databases/elec.dat"
 CBE2 <- read.table(www, header = T)
 CBE2 <- setDT(CBE2)[, paste0('elec', 1:nLag) := shift(elec, 1:nLag)][]
 CBE2 <- CBE2[(nLag+1):nrow(CBE2),]

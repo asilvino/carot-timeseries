@@ -13,7 +13,7 @@ library(MASS)
 nLag <- 12
 khorizon <- 1
 
-www <- "c:/ar/project/databases/stemp.dat"
+www <- "./databases/stemp.dat"
 #TEMP2 <- read.csv("c:/ar/project/databases/shtemp2.csv", header = TRUE, sep = ";", quote = "\"")
 
 TEMP <- read.table(www, header = T)
