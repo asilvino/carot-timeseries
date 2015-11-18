@@ -8,7 +8,7 @@ These examples are using "caret","data.table" and "pls" libraries.
 
 All the databases were retrived from the following places:
 <br/>
-**S&P500** Index1 (from January 2, 1990 to December 31, 1999).<br/>
+**S&P500** Close value of day (daily)(from January 2, 1990 to December 31, 1999).<br/>
 SP500 -> <br/>
 > library(MASS)<br/>
 > data(SP500)<br/>
@@ -25,7 +25,7 @@ and chocolate-based production (tonnes) in Australia over the period January
 elec -> <br/>
 http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/cbe.dat
 
-Temperature data (1850–2007; see Brohan et al. 2006) for the southern
+The monthly temperature data (1850–2007; see Brohan et al. 2006) for the southern
 hemisphere were extracted from the database maintained by the University
 of East Anglia Climatic Research Unit
 <br/>
@@ -35,6 +35,7 @@ http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/stemp.dat
 The other databases are from :
 https://www.kaggle.com/c/rossmann-store-sales/data<br/>
 You are provided with historical sales data for 1,115 Rossmann stores. The task is to forecast the "Sales" column for the test set. Note that some stores in the dataset were temporarily closed for refurbishment.<br/>
+The date is in one column<br/>
 store1 -> store1.csv <br/>
 store2 -> store2.csv<br/>
 
