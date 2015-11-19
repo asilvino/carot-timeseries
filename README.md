@@ -4,7 +4,7 @@ These examples are using "caret","data.table" and "pls" libraries.
 
 ` install.packages("caret")`<br/>
 ` install.packages("data.table")`<br/>
-` install.packages("pls")`<br/>
+` install.packages("bst")`<br/>
 
 All the databases were retrived from the following places:
 <br/>
