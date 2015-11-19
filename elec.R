@@ -1,46 +1,46 @@
-
-
 library(caret)
 library(ggplot2)
 library(pls)
 library(data.table)
 library(rpart)
+library(bst)
+library(plyr)
 
 nLag <- 12
 khorizon <- 1
 
-www <- "./databases/elec.dat"
+www <- "c:/ar/project/databases/elect.dat"
 CBE <- read.table(www, header = T)
-www <- "./databases/elec.dat"
-CBE2 <- read.table(www, header = T)
-CBE2 <- setDT(CBE2)[, paste0('elec', 1:nLag) := shift(elec, 1:nLag)][]
-CBE2 <- CBE2[(nLag+1):nrow(CBE2),]
-#CBE2 <- read.table(www2, header = T)
+base <- CBE
+variable <- 'elec'
+base$elec = (base$elec-min(base$elec))/(max(base$elec)-min(base$elec))
+  
+base <- setDT(base)[, paste0(variable, 1:nLag) := shift(elec, 1:nLag)][]
+base <- base[(nLag+1):nrow(base),]
+
 Elec.ts <- ts(CBE[, 1], start = 1958, freq = 12)
-elec <- CBE[, 1]
 plot(cbind(Elec.ts))
 
 # Start the clock!
 ptm <- proc.time()
 
-base <- CBE2
+
 timeSlices <- createTimeSlices(1:nrow(base), 
                    initialWindow =nrow(base)*2/3, horizon = khorizon , fixedWindow = FALSE)
 str(timeSlices,max.level = 1)
 trainSlices <- timeSlices[[1]]
 testSlices <- timeSlices[[2]]
-predT  <- c(1,2)
-predT  <- predT[0]
-trueT  <- c(1,2)
-trueT  <- trueT[0]
-#choc	beer	elec
+predTest  <- c(1,2)
+predTest  <- predTest[0]
+trueTest  <- c(1,2)
+trueTest  <- trueTest[0]
 
 for(i in 1:length(trainSlices)){
 
   plsFitTime <- train(elec ~  .,
                       data = base[trainSlices[[i]],], 
-                      method = "pls",
-                      preProc = c("center", "scale"))
+                      method = "treebag"
+                      )
   
   
 
@@ -51,26 +51,51 @@ for(i in 1:length(trainSlices)){
 
   if(i==1){
 
-    predT <- c(predT,pred)
-    trueT <- c(trueT,true)
+    predTest <- c(predTest,pred)
+    trueTest <- c(trueTest,true)
   }else{
-    predT <- c(predT,pred[khorizon])
-    trueT <- c(trueT,true[khorizon])
+    predTest <- c(predTest,pred[khorizon])
+    trueTest <- c(trueTest,true[khorizon])
   }
 
- # mean(plsFitTime[4]$results$RMSE)^2
-
 }
-mse <- mean( (predT- trueT)^2, na.rm = TRUE)
-mape <- mean(abs((trueT - predT)/trueT))
-mape
-mse
+mseTest <- mean( (predTest- trueTest)^2, na.rm = TRUE)
+div <- abs((trueTest - predTest)/trueTest)
+mapeTest <- mean(div[is.finite(div)], na.rm = TRUE)
+mapeTest
+mseTest
 plsFitTime
 
-plot(predT,type="l",col="red")
-lines(trueT,col="green")
+plot(predTest,type="l",col="red")
+lines(trueTest,col="green")
 
 acf(CBE$elec)
+
 # Stop the clock
 proc.time() - ptm
 
+#start train
+ptm <- proc.time()
+predTrain  <- c(1,2)
+predTrain  <- predTrain[0]
+trueTrain  <- c(1,2)
+trueTrain  <- trueTrain[0]
+
+baseTrain <- base[1:nrow(base)*2/3,]
+
+for(i in 1:nrow(baseTrain)){
+  pred <- predict(plsFitTime,baseTrain[i,])
+  true <- baseTrain$elec[i]
+  predTrain <- c(predTrain,pred)
+  trueTrain <- c(trueTrain,true)
+}
+
+mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
+div <- abs((trueTrain - predTrain)/trueTrain)
+mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
+mapeTrain
+mseTrain
+proc.time() - ptm
+
+plot(predTrain,type="l",col="red")
+lines(trueTrain,col="green")

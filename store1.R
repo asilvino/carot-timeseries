@@ -1,58 +1,104 @@
+
 library(caret)
 library(ggplot2)
 library(pls)
+library(data.table)
+library(rpart)
+library(bst)
+library(plyr)
+library(MASS)
+nLag <- 12
+khorizon <- 1
 
-loja1 <- read.csv("./databases/store1.csv", header = TRUE, sep = ";", quote = "\"")
+loja1 <- read.csv("c:/ar/project/databases/train-loja1.csv", header = TRUE, sep = ";", quote = "\"")
 plot(loja1$Date,loja1$Sales)
 
 plot(loja1$Sales, type = 'l')
 
-#data(economics)
-#acf(resid(Beer.ima))
+base <- loja1
+base$Sales = (base$Sales-min(base$Sales))/(max(base$Sales)-min(base$Sales))
+  
+base <- setDT(base)[, paste0('Sales', 1:nLag) := shift(Sales, 1:nLag)][]
+base <- base[(nLag+1):nrow(base),]
+
+
+
 # Start the clock!
 ptm <- proc.time()
 
-base <- loja1
-khorizon <- 1
 
 timeSlices <- createTimeSlices(1:nrow(base), 
                    initialWindow =nrow(base)*2/3, horizon = khorizon , fixedWindow = FALSE)
 str(timeSlices,max.level = 1)
 trainSlices <- timeSlices[[1]]
 testSlices <- timeSlices[[2]]
-predT  <- c(1,2)
-predT  <- predT[0]
-trueT  <- c(1,2)
-trueT  <- trueT[0]
-#Store DayOfWeek   Date Sales Customers Open Promo  StateHoliday SchoolHoliday
+predTest  <- c(1,2)
+predTest  <- predTest[0]
+trueTest  <- c(1,2)
+trueTest  <- trueTest[0]
 
 for(i in 1:length(trainSlices)){
-  nLag <- length(trainSlices[[i]])
-  plsFitTime <- train(Sales ~ DayOfWeek + Customers + Open+Promo + StateHoliday + SchoolHoliday,
-                      data = base[trainSlices[[i]][1:nLag],],
-                      method = "pls",
-                      preProc = c("center", "scale"))
+
+  plsFitTime <- train(Sales ~  .,
+                      data = base[trainSlices[[i]],], 
+                      method = "treebag"
+                      )
+  
+  
+
   pred <- predict(plsFitTime,base[testSlices[[i]],])
 
 
   true <- base$Sales[testSlices[[i]]]
-  predT <- c(predT,pred)
-  trueT <- c(trueT,true)
 
-#  plot(true, col = "red", ylab = "true (red) , pred (blue)", 
-#            main = i, ylim = range(c(pred,true)))
-#  points(pred, col = "blue") 
+  if(i==1){
+
+    predTest <- c(predTest,pred)
+    trueTest <- c(trueTest,true)
+  }else{
+    predTest <- c(predTest,pred[khorizon])
+    trueTest <- c(trueTest,true[khorizon])
+  }
+
 }
-mse <- mean( (predT- trueT)^2, na.rm = TRUE)
-mape <- mean(abs((trueT - predT)/trueT))
-mape
-mse
+mseTest <- mean( (predTest- trueTest)^2, na.rm = TRUE)
+div <- abs((trueTest - predTest)/trueTest)
+mapeTest <- mean(div[is.finite(div)], na.rm = TRUE)
+mapeTest
+mseTest
+plsFitTime
+
+plot(predTest,type="l",col="red")
+lines(trueTest,col="green")
+
+acf(loja1$Sales)
+
 # Stop the clock
 proc.time() - ptm
-plsFitTime
-testeLoja_pred <- predT
-testeLoja_true <- trueT
 
-plot(testeLoja_pred,type="l",col="red")
-lines(testeLoja_true,col="green")
+#start train
+ptm <- proc.time()
+predTrain  <- c(1,2)
+predTrain  <- predTrain[0]
+trueTrain  <- c(1,2)
+trueTrain  <- trueTrain[0]
 
+baseTrain <- base[1:nrow(base)*2/3,]
+
+for(i in 1:nrow(baseTrain)){
+  pred <- predict(plsFitTime,baseTrain[i,])
+  true <- baseTrain$Sales[i]
+  predTrain <- c(predTrain,pred)
+  trueTrain <- c(trueTrain,true)
+}
+
+mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
+div <- abs((trueTrain - predTrain)/trueTrain)
+mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
+mapeTrain
+mseTrain
+
+proc.time() - ptm
+
+plot(predTrain,type="l",col="red")
+lines(trueTrain,col="green")
