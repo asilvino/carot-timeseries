@@ -10,7 +10,7 @@ library(MASS)
 nLag <- 12
 khorizon <- 1
 
-loja2 <- read.csv("c:/ar/project/databases/train-loja2.csv", header = TRUE, sep = ";", quote = "\"")
+loja2 <- read.csv("./databases/store2.csv", header = TRUE, sep = ";", quote = "\"")
 plot(loja2$Date,loja2$Sales)
 
 plot(loja2$Sales, type = 'l')
