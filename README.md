@@ -1,6 +1,6 @@
 # TreeRegressionExamples
 Tree regression time series examples <br/>
-These examples are using "caret","data.table" and "pls" libraries.
+These examples are using "caret","data.table" and "bst" libraries.
 
 ` install.packages("caret")`<br/>
 ` install.packages("data.table")`<br/>
