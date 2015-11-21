@@ -50,7 +50,7 @@ The date is in one column<br/>
 
 #Basic approach
 ```
-variabla<- 'the-predictable-variable'
+variabla<- 'elec'#the-predictable-variable
 nLag <- 12
 khorizon <- 1
 #adding the lags (historical data) as atributes in the base
