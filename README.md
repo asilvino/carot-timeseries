@@ -52,7 +52,7 @@ The date is in one column<br/>
 variabla<- 'the-predictable-variable'
 nLag <- 12
 khorizon <- 1
-#adding the lag's as atributes in the base
+#adding the lags (historical data) as atributes in the base
 base <- setDT(base)[, paste0(variable, 1:nLag) := shift(elec, 1:nLag)][]
 base <- base[(nLag+1):nrow(base),]
 #creating the times slices just like this image:
