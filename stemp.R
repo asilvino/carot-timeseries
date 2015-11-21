@@ -10,7 +10,7 @@ library(plyr)
 nLag <- 12
 khorizon <- 1
 
-www <- "c:/ar/project/databases/shtemp.dat"
+www <- "./databases/stemp.dat"
 TEMP <- read.table(www, header = T)
 base <- TEMP
 variable <- 'temperature'
