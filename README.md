@@ -54,6 +54,7 @@ The date is in one column<br/>
 We will use the `createTimeSlices` tool, and generate the following format of samples:<br/>
 <img src='https://raw.githubusercontent.com/alvarojoao/TreeRegressionExamples/master/imagens/slices.png'><br/>
 So you can make a cross-validation based on holdout method or K-fold cross validation , respecting the series cronology.<br/>
+##Code Sample<br/>
 ```
 variabla<- 'elec'#the-predictable-variable
 nLag <- 12
