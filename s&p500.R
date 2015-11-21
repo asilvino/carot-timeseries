@@ -10,7 +10,7 @@ library(MASS)
 nLag <- 12
 khorizon <- 1
 
-sp500 <- read.csv("c:/ar/project/databases/SP500.csv", header = TRUE, sep = ";", quote = "\"")
+sp500 <- read.csv("./databases/SP500.csv", header = TRUE, sep = ";", quote = "\"")
 
 base <- sp500
 base$SP500 = (base$SP500-min(base$SP500))/(max(base$SP500)-min(base$SP500))
