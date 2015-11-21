@@ -9,7 +9,7 @@ library(plyr)
 nLag <- 12
 khorizon <- 1
 
-www <- "c:/ar/project/databases/elect.dat"
+www <- "./databases/elec.dat"
 CBE <- read.table(www, header = T)
 base <- CBE
 variable <- 'elec'
