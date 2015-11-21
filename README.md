@@ -48,7 +48,12 @@ The date is in one column<br/>
 **store1** -> store1.csv <br/>
 **store2** -> store2.csv <br/>
 
-#Basic approach
+#Basic approach<br/>
+
+##Preparing the samples<br/>
+We will use the `createTimeSlices` tool, and generate the following format of samples:<br/>
+<img src='https://raw.githubusercontent.com/alvarojoao/TreeRegressionExamples/master/imagens/slices.png'><br/>
+So you can make a cross-validation based on holdout method or K-fold cross validation , respecting the series cronology.<br/>
 ```
 variabla<- 'elec'#the-predictable-variable
 nLag <- 12
@@ -56,8 +61,6 @@ khorizon <- 1
 #adding the lags (historical data) as atributes in the base
 base <- setDT(base)[, paste0(variable, 1:nLag) := shift(elec, 1:nLag)][]
 base <- base[(nLag+1):nrow(base),]
-#creating the times slices just like this image:
-<img src='https://raw.githubusercontent.com/alvarojoao/TreeRegressionExamples/master/imagens/slices.png'>
 timeSlices <- createTimeSlices(1:nrow(base), 
                    initialWindow =nrow(base)*2/3, horizon = khorizon , fixedWindow = FALSE)
 str(timeSlices,max.level = 1)
