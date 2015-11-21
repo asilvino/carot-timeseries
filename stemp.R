@@ -20,6 +20,8 @@ base <- setDT(base)[, paste0('temperature', 1:nLag) := shift(temperature, 1:nLag
 base <- base[(nLag+1):nrow(base),]
 
 Temp.ts <- ts(TEMP[, 1], start = 1958, freq = 12)
+acf(TEMP$temperature)
+
 plot(cbind(Temp.ts))
 
 
@@ -71,34 +73,33 @@ plsFitTime
 plot(predTest,type="l",col="red")
 lines(trueTest,col="green")
 
-acf(TEMP$temperature)
 
 # Stop the clock
 proc.time() - ptm
 
-#start train
-ptm <- proc.time()
-predTrain  <- c(1,2)
-predTrain  <- predTrain[0]
-trueTrain  <- c(1,2)
-trueTrain  <- trueTrain[0]
+# #start train
+# ptm <- proc.time()
+# predTrain  <- c(1,2)
+# predTrain  <- predTrain[0]
+# trueTrain  <- c(1,2)
+# trueTrain  <- trueTrain[0]
 
-baseTrain <- base[1:nrow(base)*2/3,]
+# baseTrain <- base[1:nrow(base)*2/3,]
 
-for(i in 1:nrow(baseTrain)){
-  pred <- predict(plsFitTime,baseTrain[i,])
-  true <- baseTrain$temperature[i]
-  predTrain <- c(predTrain,pred)
-  trueTrain <- c(trueTrain,true)
-}
+# for(i in 1:nrow(baseTrain)){
+#   pred <- predict(plsFitTime,baseTrain[i,])
+#   true <- baseTrain$temperature[i]
+#   predTrain <- c(predTrain,pred)
+#   trueTrain <- c(trueTrain,true)
+# }
 
-mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
-div <- abs((trueTrain - predTrain)/trueTrain)
-mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
-mapeTrain
-mseTrain
+# mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
+# div <- abs((trueTrain - predTrain)/trueTrain)
+# mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
+# mapeTrain
+# mseTrain
 
-proc.time() - ptm
+# proc.time() - ptm
 
-plot(predTrain,type="l",col="red")
-lines(trueTrain,col="green")
+# plot(predTrain,type="l",col="red")
+# lines(trueTrain,col="green")

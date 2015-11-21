@@ -18,6 +18,7 @@ base$SP500 = (base$SP500-min(base$SP500))/(max(base$SP500)-min(base$SP500))
 base <- setDT(base)[, paste0('SP500', 1:nLag) := shift(SP500, 1:nLag)][]
 base <- base[(nLag+1):nrow(base),]
 
+acf(sp500$SP500)
 plot(sp500$SP500, type = 'l')
 
 
@@ -69,34 +70,33 @@ plsFitTime
 plot(predTest,type="l",col="red")
 lines(trueTest,col="green")
 
-acf(sp500$SP500)
 
 # Stop the clock
 proc.time() - ptm
 
-#start train
-ptm <- proc.time()
-predTrain  <- c(1,2)
-predTrain  <- predTrain[0]
-trueTrain  <- c(1,2)
-trueTrain  <- trueTrain[0]
+# #start train
+# ptm <- proc.time()
+# predTrain  <- c(1,2)
+# predTrain  <- predTrain[0]
+# trueTrain  <- c(1,2)
+# trueTrain  <- trueTrain[0]
 
-baseTrain <- base[1:nrow(base)*2/3,]
+# baseTrain <- base[1:nrow(base)*2/3,]
 
-for(i in 1:nrow(baseTrain)){
-  pred <- predict(plsFitTime,baseTrain[i,])
-  true <- baseTrain$SP500[i]
-  predTrain <- c(predTrain,pred)
-  trueTrain <- c(trueTrain,true)
-}
+# for(i in 1:nrow(baseTrain)){
+#   pred <- predict(plsFitTime,baseTrain[i,])
+#   true <- baseTrain$SP500[i]
+#   predTrain <- c(predTrain,pred)
+#   trueTrain <- c(trueTrain,true)
+# }
 
-mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
-div <- abs((trueTrain - predTrain)/trueTrain)
-mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
-mapeTrain
-mseTrain
+# mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
+# div <- abs((trueTrain - predTrain)/trueTrain)
+# mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
+# mapeTrain
+# mseTrain
 
-proc.time() - ptm
+# proc.time() - ptm
 
-plot(predTrain,type="l",col="red")
-lines(trueTrain,col="green")
+# plot(predTrain,type="l",col="red")
+# lines(trueTrain,col="green")

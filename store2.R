@@ -12,6 +12,7 @@ khorizon <- 1
 
 loja2 <- read.csv("./databases/store2.csv", header = TRUE, sep = ";", quote = "\"")
 plot(loja2$Date,loja2$Sales)
+acf(loja2$Sales)
 
 plot(loja2$Sales, type = 'l')
 
@@ -71,34 +72,33 @@ plsFitTime
 plot(predTest,type="l",col="red")
 lines(trueTest,col="green")
 
-acf(loja2$Sales)
 
 # Stop the clock
 proc.time() - ptm
 
-#start train
-ptm <- proc.time()
-predTrain  <- c(1,2)
-predTrain  <- predTrain[0]
-trueTrain  <- c(1,2)
-trueTrain  <- trueTrain[0]
+# #start train
+# ptm <- proc.time()
+# predTrain  <- c(1,2)
+# predTrain  <- predTrain[0]
+# trueTrain  <- c(1,2)
+# trueTrain  <- trueTrain[0]
 
-baseTrain <- base[1:nrow(base)*2/3,]
+# baseTrain <- base[1:nrow(base)*2/3,]
 
-for(i in 1:nrow(baseTrain)){
-  pred <- predict(plsFitTime,baseTrain[i,])
-  true <- baseTrain$Sales[i]
-  predTrain <- c(predTrain,pred)
-  trueTrain <- c(trueTrain,true)
-}
+# for(i in 1:nrow(baseTrain)){
+#   pred <- predict(plsFitTime,baseTrain[i,])
+#   true <- baseTrain$Sales[i]
+#   predTrain <- c(predTrain,pred)
+#   trueTrain <- c(trueTrain,true)
+# }
 
-mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
-div <- abs((trueTrain - predTrain)/trueTrain)
-mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
-mapeTrain
-mseTrain
+# mseTrain <- mean( (predTrain- trueTrain)^2, na.rm = TRUE)
+# div <- abs((trueTrain - predTrain)/trueTrain)
+# mapeTrain <- mean(div[is.finite(div)], na.rm = TRUE)
+# mapeTrain
+# mseTrain
 
-proc.time() - ptm
+# proc.time() - ptm
 
-plot(predTrain,type="l",col="red")
-lines(trueTrain,col="green")
+# plot(predTrain,type="l",col="red")
+# lines(trueTrain,col="green")
