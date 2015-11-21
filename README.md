@@ -17,11 +17,12 @@ These examples are using "caret","data.table" and "bst" libraries.
 All the databases were retrived from the following places:
 <br/><br/>
 **S&P500** Close value of day (daily)(from January 2, 1990 to December 31, 1999).<br/>
-SP500 -> <br/>
-> library(MASS)<br/>
-> data(SP500)<br/>
-> plot(SP500, type = 'l')<br/>
-
+**SP500** -> <br/>
+```
+> library(MASS)
+> data(SP500)
+> plot(SP500, type = 'l')
+```
 **elec.dat** and **stemp.dat** are from the Paul Cowpertwait's databases, from **Introductory Time Series with R** <br/>
 http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/#Data
 
