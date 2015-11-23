@@ -72,7 +72,7 @@ lines(trueTest,col="green")
 
 
 # # Stop the clock
-# proc.time() - ptm
+proc.time() - ptm
 
 # #start train
 ptm <- proc.time()
