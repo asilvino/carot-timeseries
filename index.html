@@ -1,0 +1,166 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on https://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" href="stylesheets/github-dark.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Time Series perdition examples</title>
+  <meta name="description" content="Tree regression (CART) with time series examples">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Time Series perdition examples</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Tree regression (CART) with time series examples</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/alvarojoao/timeseriesExamples/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/alvarojoao/timeseriesExamples/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/alvarojoao/timeseriesExamples" class="code">View Time Series perdition examples on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>
+<a id="tree-regression-with-time-series-examples" class="anchor" href="#tree-regression-with-time-series-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tree Regression with time series Examples</h1>
+
+<p>Tree regression time series examples <br>
+These examples are using "<strong>caret</strong>","<strong>data.table</strong>" and "<strong>bst</strong>" libraries.</p>
+
+<p><code>install.packages("caret")</code><br>
+<code>install.packages("data.table")</code><br>
+<code>install.packages("bst")</code><br></p>
+
+<h2>
+<a id="databases" class="anchor" href="#databases" aria-hidden="true"><span class="octicon octicon-link"></span></a>Databases:</h2>
+
+<ul>
+<li>SP500.csv</li>
+<li>elec.dat<br>
+</li>
+<li>stemp.dat </li>
+<li>store1.csv</li>
+<li>store2.csv</li>
+</ul>
+
+<p>All the databases were retrived from the following places:
+<br><br>
+<strong>S&amp;P500</strong> Close value of day (daily)(from January 2, 1990 to December 31, 1999).<br>
+<strong>SP500</strong> -&gt; <br></p>
+
+<pre><code>&gt; library(MASS)
+&gt; data(SP500)
+&gt; plot(SP500, type = 'l')
+</code></pre>
+
+<p><strong>elec.dat</strong> and <strong>stemp.dat</strong> are from the Paul Cowpertwait's databases, from <strong>Introductory Time Series with R</strong> <br>
+<a href="http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/#Data">http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/#Data</a></p>
+
+<p>The monthly supply of electricity (millions of kWh), beer (Ml),
+and chocolate-based production (tonnes) in Australia over the period January
+1958 to December 1990 are available from the Australian Bureau of Statistics
+(ABS).
+ <br>
+<strong>elec</strong> -&gt; <br>
+<a href="http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/cbe.dat">http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/cbe.dat</a></p>
+
+<p>The monthly temperature data (1850–2007; see Brohan et al. 2006) for the southern
+hemisphere were extracted from the database maintained by the University
+of East Anglia Climatic Research Unit
+<br>
+<strong>stemp</strong> -&gt; <br>
+<a href="http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/stemp.dat">http://staff.elena.aut.ac.nz/Paul-Cowpertwait/ts/stemp.dat</a></p>
+
+<p>The other databases <strong>store1</strong> ,<strong>store2</strong>  are from :
+<a href="https://www.kaggle.com/c/rossmann-store-sales/data">https://www.kaggle.com/c/rossmann-store-sales/data</a><br>
+You are provided with historical sales data for 1,115 Rossmann stores, from 01/01/2013 to 31/07/2015. The task is to forecast the "Sales" column for the test set. Note that some stores in the dataset were temporarily closed for refurbishment.<br>
+The date is in one column<br>
+<strong>store1</strong> -&gt; store1.csv <br>
+<strong>store2</strong> -&gt; store2.csv <br></p>
+
+<h1>
+<a id="basic-approach" class="anchor" href="#basic-approach" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic approach<br>
+</h1>
+
+<h2>
+<a id="preparing-the-samples" class="anchor" href="#preparing-the-samples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preparing the samples<br>
+</h2>
+
+<p>We will use the <code>createTimeSlices</code> tool, and generate the following format of samples:<br>
+<img src="https://raw.githubusercontent.com/alvarojoao/TreeRegressionExamples/master/imagens/slices.png"><br>
+So you can make a cross-validation based on holdout method or K-fold cross validation , respecting the series cronology.<br></p>
+
+<h2>
+<a id="code-sample" class="anchor" href="#code-sample" aria-hidden="true"><span class="octicon octicon-link"></span></a>Code Sample<br>
+</h2>
+
+<pre><code>variabla&lt;- 'elec'#the-predictable-variable
+nLag &lt;- 12
+khorizon &lt;- 1
+#adding the lags (historical data) as atributes in the base
+base &lt;- setDT(base)[, paste0(variable, 1:nLag) := shift(elec, 1:nLag)][]
+base &lt;- base[(nLag+1):nrow(base),]
+timeSlices &lt;- createTimeSlices(1:nrow(base), 
+                   initialWindow =nrow(base)*2/3, horizon = khorizon , fixedWindow = FALSE)
+str(timeSlices,max.level = 1)
+trainSlices &lt;- timeSlices[[1]]
+testSlices &lt;- timeSlices[[2]]
+for(i in 1:length(trainSlices)){
+  plsFitTime &lt;- train(variable ~  .,
+                      data = base[trainSlices[[i]],], 
+                      method = "treebag"
+                      )
+  pred &lt;- predict(plsFitTime,base[testSlices[[i]],])
+  true &lt;- base$elec[testSlices[[i]]]
+}
+</code></pre>
+
+<p><code>...</code>
+<code>method = "treebag"#here we can change for any other from this list:</code><a href="http://topepo.github.io/caret/modelList.html">here</a>
+<code>....</code></p>
+
+<h2>
+<a id="have-fun" class="anchor" href="#have-fun" aria-hidden="true"><span class="octicon octicon-link"></span></a>Have FUN!<br>
+</h2>
+
+<p>references:<br>
+<a href="http://topepo.github.io/caret/splitting.html#time">caret lib</a><br>
+<a href="http://www.r-bloggers.com/time-series-cross-validation-5/">r-blogger time series cross validation</a><br></p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/alvarojoao" class="avatar"><img src="https://avatars3.githubusercontent.com/u/1022080?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/alvarojoao">alvarojoao</a> maintains <a href="https://github.com/alvarojoao/timeseriesExamples">Time Series perdition examples</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/alvarojoao/timeseriesExamples/tarball/master" class="tar">tar</a><a href="https://github.com/alvarojoao/timeseriesExamples/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
