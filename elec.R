@@ -75,7 +75,7 @@ lines(trueTest,col="green")
 # proc.time() - ptm
 
 # #start train
-# ptm <- proc.time()
+ptm <- proc.time()
 # predTrain  <- c(1,2)
 # predTrain  <- predTrain[0]
 # trueTrain  <- c(1,2)
